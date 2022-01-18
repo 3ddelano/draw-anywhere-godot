@@ -12,14 +12,15 @@ const SP_KEY_ALT = (1 << 26)
 const SP_KEY_META = (1 << 27)
 const SP_KEY_CTRL = (1 << 28)
 
-# Change these to your preferred keys
+# -----------Change these to your preferred keys-----------
+# Global Shortcuts - Works anywhere
 var KEY_DRAW_MODE_TOGGLE = SP_KEY_CTRL | KEY_QUOTELEFT # Ctrl + `
+# Draw mode Shortcuts: These shortcuts will work only when draw mode is active
 var KEY_CLEAR_ALL = KEY_C # C key
 var KEY_CLEAR_LAST = KEY_Z # Z key
 var KEY_RESET_POSITION = KEY_R # R key
-
-
-# -----------------------------------
+var KEY_TOOLBAR_TOGGLE = KEY_H # H key
+# --------------------------------------------------------
 
 
 const SETTINGS_PATH = "user://draw_anywhere.config"
@@ -116,6 +117,12 @@ func _input(event: InputEvent) -> void:
 				toolbar._set_global_position(centered_pos)
 				plugin_settings.toolbar_pos = centered_pos
 				get_tree().set_input_as_handled()
+
+			KEY_TOOLBAR_TOGGLE:
+				# Toggle the toolbar's visibility
+				toolbar.visible = not toolbar.visible
+				get_tree().set_input_as_handled()
+
 
 
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
