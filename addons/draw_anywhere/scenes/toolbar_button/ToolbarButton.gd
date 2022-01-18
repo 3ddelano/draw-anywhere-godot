@@ -38,4 +38,5 @@ func set_state(p_state: int) -> void:
 	else:
 		mouse_default_cursor_shape = Control.CURSOR_ARROW
 
-
+func _gui_input(event: InputEvent) -> void:
+	get_tree().set_input_as_handled()

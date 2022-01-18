@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/pen_icon.svg-50a14df90480fe82775b10e887a2d5be.stex"
+path="res://.import/pen_icon.svg-b0bda82545fba2a428ce27a1436b41f9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/annotate_draw_in_editor/assets/icons/pen_icon.svg"
-dest_files=[ "res://.import/pen_icon.svg-50a14df90480fe82775b10e887a2d5be.stex" ]
+source_file="res://addons/draw_anywhere/assets/icons/pen_icon.svg"
+dest_files=[ "res://.import/pen_icon.svg-b0bda82545fba2a428ce27a1436b41f9.stex" ]
 
 [params]
 

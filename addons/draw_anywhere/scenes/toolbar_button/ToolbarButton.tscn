@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://addons/annotate_draw_in_editor/assets/icons/pen_icon.svg" type="Texture" id=1]
-[ext_resource path="res://addons/annotate_draw_in_editor/scenes/toolbar_button/ToolbarButton.gd" type="Script" id=2]
+[ext_resource path="res://addons/draw_anywhere/assets/icons/pen_icon.svg" type="Texture" id=1]
+[ext_resource path="res://addons/draw_anywhere/scenes/toolbar_button/ToolbarButton.gd" type="Script" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
 draw_center = false
@@ -16,6 +16,7 @@ modulate = Color( 0.933333, 0.933333, 0.933333, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
+focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4

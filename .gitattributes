@@ -9,8 +9,6 @@
 /LICENSE.md      export-ignore
 /README.md      export-ignore
 /CHANGELOG.md      export-ignore
-/plugin_icon.import.png      export-ignore
-/plugin_icon.png      export-ignore
-/icon.import.png      export-ignore
+/icon.png.import      export-ignore
 /icon.png      export-ignore
 /test      export-ignore

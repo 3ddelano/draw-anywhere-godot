@@ -1,0 +1,198 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://addons/draw_anywhere/scenes/toolbar_button/ToolbarButton.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/draw_anywhere/assets/icons/clear_icon.svg" type="Texture" id=2]
+[ext_resource path="res://addons/draw_anywhere/scenes/Toolbar.gd" type="Script" id=3]
+[ext_resource path="res://addons/draw_anywhere/assets/ToolbarTheme.tres" type="Theme" id=4]
+[ext_resource path="res://addons/draw_anywhere/assets/icons/help_icon.svg" type="Texture" id=5]
+
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 2.0
+content_margin_bottom = 2.0
+bg_color = Color( 0.2, 0.223529, 0.278431, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_blend = true
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 20
+shadow_color = Color( 0, 0, 0, 0.34902 )
+shadow_size = 5
+
+[node name="Toolbar" type="PanelContainer"]
+margin_right = 326.0
+margin_bottom = 64.0
+mouse_default_cursor_shape = 13
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 4 )
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HelpPopup" type="AcceptDialog" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 324.0
+margin_bottom = 198.0
+theme = ExtResource( 4 )
+window_title = "Annotate Shortcuts"
+
+[node name="MC" type="MarginContainer" parent="HelpPopup"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -38.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HelpPopup/MC"]
+margin_right = 306.0
+margin_bottom = 255.0
+bbcode_enabled = true
+bbcode_text = "[center]Global[/center]
+Ctrl + `            ==  Toggle Draw Mode
+
+[center]In draw mode[/center]
+Left Click       ==  Draw line
+Right Click     == Exit draw mode
+C                    == Clear all lines
+Z                    == Clear last line
+R                    == Reset the toolbar position
+
+[center]Limitations?[/center]
+The toolbar will work everywhere except when there is a popup open eg.  in EditorSettings, in ProjectSettings, etc.
+(not really a limitation since you can use the global keyboard shortcut to enable Draw mode)
+"
+text = "Global
+Ctrl + `            ==  Toggle Draw Mode
+
+In draw mode
+Left Click       ==  Draw line
+Right Click     == Exit draw mode
+C                    == Clear all lines
+Z                    == Clear last line
+R                    == Reset the toolbar position
+
+Limitations?
+The toolbar will work everywhere except when there is a popup open eg.  in EditorSettings, in ProjectSettings, etc.
+(not really a limitation since you can use the global keyboard shortcut to enable Draw mode)
+"
+fit_content_height = true
+
+[node name="MC" type="MarginContainer" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 324.0
+margin_bottom = 62.0
+mouse_filter = 1
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="VB" type="VBoxContainer" parent="MC"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 304.0
+margin_bottom = 56.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Top" type="HBoxContainer" parent="MC/VB"]
+margin_left = 84.0
+margin_right = 215.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_constants/separation = 8
+
+[node name="HelpButton" parent="MC/VB/Top" instance=ExtResource( 1 )]
+texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 5 )
+texture_hover = ExtResource( 5 )
+texture_disabled = ExtResource( 5 )
+texture_focused = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="MC/VB/Top"]
+margin_left = 32.0
+margin_top = 5.0
+margin_right = 131.0
+margin_bottom = 19.0
+mouse_filter = 1
+size_flags_horizontal = 0
+text = "Draw Anywhere"
+
+[node name="HB" type="HBoxContainer" parent="MC/VB"]
+margin_top = 28.0
+margin_right = 300.0
+margin_bottom = 52.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_constants/separation = 8
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ClearButton" parent="MC/VB/HB" instance=ExtResource( 1 )]
+size_flags_horizontal = 0
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 2 )
+texture_hover = ExtResource( 2 )
+texture_disabled = ExtResource( 2 )
+texture_focused = ExtResource( 2 )
+
+[node name="DrawButton" parent="MC/VB/HB" instance=ExtResource( 1 )]
+margin_left = 32.0
+margin_right = 56.0
+size_flags_horizontal = 0
+
+[node name="DrawSize" type="HSlider" parent="MC/VB/HB"]
+margin_left = 64.0
+margin_top = 4.0
+margin_right = 164.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+value = 1.0
+scrollable = false
+
+[node name="DrawSizeLabel" type="Label" parent="MC/VB/HB"]
+margin_left = 172.0
+margin_top = 5.0
+margin_right = 202.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 30, 0 )
+size_flags_horizontal = 0
+text = "1"
+
+[node name="Label2" type="Label" parent="MC/VB/HB"]
+margin_left = 210.0
+margin_top = 5.0
+margin_right = 247.0
+margin_bottom = 19.0
+size_flags_horizontal = 0
+text = "Color:"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="MC/VB/HB"]
+margin_left = 255.0
+margin_right = 300.0
+margin_bottom = 24.0
+size_flags_horizontal = 0
+text = "Color"
+align = 0
+color = Color( 1, 1, 1, 1 )
