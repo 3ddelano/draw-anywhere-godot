@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/draw_anywhere/scenes/Canvas.gd" type="Script" id=1]
 [ext_resource path="res://addons/draw_anywhere/scenes/Toolbar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/draw_anywhere/scenes/Pencil.gd" type="Script" id=3]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 20
 
 [node name="Canvas" type="CanvasLayer"]
 layer = 128
@@ -33,6 +42,17 @@ anchor_bottom = 1.0
 margin_top = -14.0
 margin_right = 116.0
 text = "Draw Mode Active"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Pencil" type="Panel" parent="."]
+margin_right = 1.0
+margin_bottom = 1.0
+mouse_filter = 2
+mouse_default_cursor_shape = 2
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

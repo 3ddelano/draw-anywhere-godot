@@ -41,8 +41,9 @@ __meta__ = {
 [node name="HelpPopup" type="AcceptDialog" parent="."]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 324.0
-margin_bottom = 198.0
+margin_right = 382.0
+margin_bottom = 288.0
+rect_min_size = Vector2( 380, 0 )
 theme = ExtResource( 4 )
 window_title = "Draw Anywhere Shortcuts"
 
@@ -58,8 +59,8 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HelpPopup/MC"]
-margin_right = 306.0
-margin_bottom = 255.0
+margin_right = 364.0
+margin_bottom = 240.0
 bbcode_enabled = true
 bbcode_text = "[center]Global[/center]
 Ctrl + `            ==  Toggle Draw Mode
@@ -167,7 +168,7 @@ rect_min_size = Vector2( 100, 0 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
 min_value = 1.0
-max_value = 10.0
+max_value = 16.0
 value = 1.0
 scrollable = false
 

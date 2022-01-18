@@ -3,7 +3,7 @@ Draw Anywhere (Godot Editor)
 ###### (Get it from Godot Asset Library - Coming soon)
 
 
-### Draw anyhere in the Godot Editor. Supports multiple pen sizes and colors.
+### Draw anywhere in the Godot Editor. Supports multiple pen sizes and colors.
 
 <img alt="Godot3" src="https://img.shields.io/badge/-Godot >= 3.2.2-478CBF?style=for-the-badge&logo=godotengine&logoWidth=20&logoColor=white" />
 <br>

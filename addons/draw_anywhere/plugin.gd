@@ -7,18 +7,23 @@
 tool
 extends EditorPlugin
 
+const SP_KEY_SHIFT = (1 << 25)
+const SP_KEY_ALT = (1 << 26)
+const SP_KEY_META = (1 << 27)
+const SP_KEY_CTRL = (1 << 28)
+
 # Change these to your preferred keys
-var KEY_DRAW_MODE_TOGGLE = 268435552 # Ctrl + `
-var KEY_CLEAR_ALL = KEY_C
-var KEY_CLEAR_LAST = KEY_Z
-var KEY_RESET_POSITION = KEY_R
+var KEY_DRAW_MODE_TOGGLE = SP_KEY_CTRL | KEY_QUOTELEFT # Ctrl + `
+var KEY_CLEAR_ALL = KEY_C # C key
+var KEY_CLEAR_LAST = KEY_Z # Z key
+var KEY_RESET_POSITION = KEY_R # R key
 
 
 # -----------------------------------
 
 
-# Whether the draw mode is active
 const SETTINGS_PATH = "user://draw_anywhere.config"
+# Whether the draw mode is active
 var is_active = false
 var canvas: CanvasLayer
 var toolbar: Control
@@ -32,7 +37,10 @@ var default_plugin_settings = {
 var draw_settings = {
 	"size": 1,
 	"color": Color("#eee"),
-	"antialised": true
+	"antialised": true,
+	"begin_cap_mode": Line2D.LINE_CAP_ROUND,
+	"end_cap_mode": Line2D.LINE_CAP_ROUND,
+	"joint_mode": Line2D.LINE_JOINT_ROUND
 }
 
 
@@ -69,38 +77,7 @@ func _exit_tree() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if is_active:
-		# Only when draw mode is active should these shortcuts work
-
-		if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_RIGHT:
-			# Right mouse button was pressed, so deactivate the draw mode
-			set_active(false)
-			get_tree().set_input_as_handled()
-
-		if event is InputEventKey and event.pressed:
-			if event.scancode == KEY_CLEAR_ALL:
-				# C key was pressed, so clear the lines
-				_on_clear_button_pressed(false)
-				get_tree().set_input_as_handled()
-
-			if event.scancode == KEY_CLEAR_LAST:
-				# Z key was pressed, so clear last line
-				var lines = canvas.get_lines()
-				var line_count = lines.get_child_count()
-				if line_count > 0:
-					var last_line = lines.get_child(line_count - 1)
-					last_line.queue_free()
-				get_tree().set_input_as_handled()
-
-			if event.scancode == KEY_RESET_POSITION:
-				var centered_pos = toolbar.get_viewport_rect().size / 2 - toolbar.rect_size / 2
-				toolbar._set_global_position(centered_pos)
-				plugin_settings.toolbar_pos = centered_pos
-				get_tree().set_input_as_handled()
-
-
 	if event is InputEventKey and event.pressed and event.get_scancode_with_modifiers() == KEY_DRAW_MODE_TOGGLE:
-
 		# Toggle draw mode was pressed
 		set_active(not is_active)
 		get_tree().set_input_as_handled()
@@ -109,17 +86,52 @@ func _input(event: InputEvent) -> void:
 	if not is_active:
 		return
 
+	# The following inputs only work when draw mode is active
+
+	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_RIGHT:
+		# Right mouse button was pressed, so deactivate the draw mode
+		set_active(false)
+		get_tree().set_input_as_handled()
+
+	if event is InputEventKey and event.pressed:
+		var key = event.get_scancode_with_modifiers()
+		match key:
+			KEY_CLEAR_ALL:
+				# Clear all the lines
+				_on_clear_button_pressed(false)
+				get_tree().set_input_as_handled()
+
+			KEY_CLEAR_LAST:
+				# Clear the last line
+				var lines = canvas.get_lines()
+				var line_count = lines.get_child_count()
+				if line_count > 0:
+					var last_line = lines.get_child(line_count - 1)
+					last_line.queue_free()
+				get_tree().set_input_as_handled()
+
+			KEY_RESET_POSITION:
+				# Reset the position of the toolbar
+				var centered_pos = toolbar.get_viewport_rect().size / 2 - toolbar.rect_size / 2
+				toolbar._set_global_position(centered_pos)
+				plugin_settings.toolbar_pos = centered_pos
+				get_tree().set_input_as_handled()
+
+
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
 		if event.pressed:
 			# LMB was pressed, so start the drawing
 			should_draw = true
 			add_new_line()
+			if current_line and is_instance_valid(current_line):
+				current_line.add_point(event.position)
+				current_line.add_point(event.position + Vector2(0, 1))
 		elif should_draw:
 			should_draw = false
 		get_tree().set_input_as_handled()
 
 	if event is InputEventMouseMotion and should_draw:
-		# When mouse is moving and should_draw is true, so add points to the line
+		# Add points to the line
 		if current_line and is_instance_valid(current_line):
 			current_line.add_point(event.position)
 		get_tree().set_input_as_handled()
@@ -131,17 +143,22 @@ func _on_draw_button_pressed(is_now_active):
 
 
 func _on_clear_button_pressed(also_deactivate = true):
+	# Clear button on the toolbar was pressed
 	if also_deactivate:
+		# Also deactivate draw mode
 		set_active(false)
+
 	for line in canvas.get_lines().get_children():
 		line.queue_free()
 
 
 func _on_draw_size_changed(new_size) -> void:
+	# Draw size slider value was changed
 	draw_settings.size = new_size
 
 
 func _on_color_picker_changed(new_color) -> void:
+	# Draw color picker value was changed
 	draw_settings.color = new_color
 
 
@@ -152,27 +169,35 @@ func set_active(value: bool) -> void:
 	is_active = value
 
 	if is_active:
+		# Draw mode was activated
 		toolbar.make_draw_button_active()
+		toolbar.hide_color_picker_popup()
 		canvas.set_lines_as_toplevel(true)
 		canvas.block_mouse()
-		toolbar.hide_color_picker_popup()
 		canvas.get_active_label().visible = true
+		canvas.show_pencil(self)
 	else:
+		# Draw mode was deactivated
 		current_line = null
 		should_draw = false
 
+		toolbar.make_draw_button_normal()
 		canvas.set_lines_as_toplevel(false)
 		canvas.unblock_mouse()
-		toolbar.make_draw_button_normal()
 		canvas.get_active_label().visible = false
+		canvas.hide_pencil()
 
 
 func add_new_line():
 	# Make a new line as our current line
 	current_line = Line2D.new()
 	current_line.width = draw_settings.size
-	current_line.antialiased = draw_settings.antialised
 	current_line.default_color = draw_settings.color
+	# Additional properties
+	current_line.antialiased = draw_settings.antialised
+	current_line.begin_cap_mode = draw_settings.begin_cap_mode
+	current_line.end_cap_mode = draw_settings.end_cap_mode
+	current_line.joint_mode = draw_settings.joint_mode
 
 	canvas.get_lines().add_child(current_line)
 
@@ -201,6 +226,7 @@ func save_settings():
 	file.open(SETTINGS_PATH, File.WRITE)
 	file.store_string(var2str(settings_to_save))
 	file.close()
+
 
 func load_settings():
 	var file = File.new()
