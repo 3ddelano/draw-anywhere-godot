@@ -44,7 +44,7 @@ margin_top = 2.0
 margin_right = 324.0
 margin_bottom = 198.0
 theme = ExtResource( 4 )
-window_title = "Annotate Shortcuts"
+window_title = "Draw Anywhere Shortcuts"
 
 [node name="MC" type="MarginContainer" parent="HelpPopup"]
 anchor_right = 1.0

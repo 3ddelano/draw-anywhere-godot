@@ -1,6 +1,7 @@
-# Annotate - Draw in Editor
+# Draw Anywhere - Godot plugin
 # Author: Delano (3ddelano) Lourenco
 # https://github.com/3ddelano
+# For license: See LICENSE.md
 
 
 tool
