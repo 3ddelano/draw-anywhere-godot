@@ -3,12 +3,12 @@ extends CanvasLayer
 
 var lines
 var toolbar
-var pencil
+var draw_preview
 
 func _ready() -> void:
 	lines = $Lines
 	toolbar = $Toolbar
-	pencil = $Pencil
+	draw_preview = $DrawPreview
 	$ActiveLabel.visible = false
 
 
@@ -38,12 +38,13 @@ func set_lines_as_toplevel(value: bool):
 		lines.show_modal(true)
 
 
-func show_pencil(plugin):
-	pencil.rect_size = Vector2(plugin.draw_settings.size, plugin.draw_settings.size)
-	pencil.self_modulate = plugin.draw_settings.color
-	pencil.visible = true
-	pencil.set_process(true)
+func show_draw_preview(plugin):
+	draw_preview.rect_size = Vector2(plugin.draw_settings.size, plugin.draw_settings.size)
+	draw_preview.self_modulate = plugin.draw_settings.color
+	draw_preview.visible = true
+	draw_preview.set_process(true)
 
-func hide_pencil():
-	pencil.visible = false
-	pencil.set_process(false)
+
+func hide_draw_preview():
+	draw_preview.visible = false
+	draw_preview.set_process(false)

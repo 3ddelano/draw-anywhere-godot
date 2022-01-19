@@ -22,13 +22,13 @@ Features
 
 Automatic Installation
 --------------
-Simply download and install the plugin from the `AssetLib` in the Godot Editor. Then goto `ProjectSettings` and enable it in the `Plugins` tab. 
+Simply download and install the plugin from the `AssetLib` in the Godot Editor. Then go to `ProjectSettings` and enable it in the `Plugins` tab. 
 
 Manual Installation
 --------------
 
 This is a regular plugin for Godot.
-Copy the contents of `addons/draw_anywhere/` into the `res://addons/draw_anywhere/` folder which is in your project directory. Then goto `ProjectSettings` and enable it in the `Plugins` tab. 
+Copy the contents of `addons/draw_anywhere/` into the `res://addons/draw_anywhere/` folder which is in your project directory. Then go to `ProjectSettings` and enable it in the `Plugins` tab. 
 
 **Optional:** To exclude the plugin when exporting your project, you can add `addons/draw_anywhere/*` to the `Filters to exclude files/folders from project` in the Export settings.
 
@@ -56,9 +56,10 @@ Keyboard Shortcuts
 
 ### Global shortcuts
 
-| Shortcut                         | Description      |
-| -------------------------------- | ---------------- |
-| Ctrl + **`** (Ctrl + left quote) | Toggle draw mode |
+| Shortcut                         | Description        |
+| -------------------------------- | ------------------ |
+| Ctrl + **`** (Ctrl + left quote) | Toggle draw mode   |
+| Ctrl + F1                        | Toggle the toolbar |
 
 ### Draw mode shortcuts
 These shortcuts will only work when draw mode is active

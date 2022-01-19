@@ -60,17 +60,18 @@ __meta__ = {
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HelpPopup/MC"]
 margin_right = 364.0
-margin_bottom = 240.0
+margin_bottom = 255.0
 bbcode_enabled = true
 bbcode_text = "[center]Global[/center]
 Ctrl + `            ==  Toggle Draw Mode
+Ctrl + F1          == Toggle the toolbar
 
 [center]In draw mode[/center]
-Left Click       ==  Draw line
-Right Click     == Exit draw mode
-C                    == Clear all lines
-Z                    == Clear last line
-R                    == Reset the toolbar position
+Left Click                 ==  Draw line
+Right Click / Esc    == Exit draw mode
+C                               == Clear all lines
+Z                               == Clear last line
+R                               == Reset the toolbar position
 
 [center]Limitations?[/center]
 The toolbar will work everywhere except when there is a popup open eg.  in EditorSettings, in ProjectSettings, etc.
@@ -78,13 +79,14 @@ The toolbar will work everywhere except when there is a popup open eg.  in Edito
 "
 text = "Global
 Ctrl + `            ==  Toggle Draw Mode
+Ctrl + F1          == Toggle the toolbar
 
 In draw mode
-Left Click       ==  Draw line
-Right Click     == Exit draw mode
-C                    == Clear all lines
-Z                    == Clear last line
-R                    == Reset the toolbar position
+Left Click                 ==  Draw line
+Right Click / Esc    == Exit draw mode
+C                               == Clear all lines
+Z                               == Clear last line
+R                               == Reset the toolbar position
 
 Limitations?
 The toolbar will work everywhere except when there is a popup open eg.  in EditorSettings, in ProjectSettings, etc.

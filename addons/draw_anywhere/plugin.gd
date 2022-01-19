@@ -15,20 +15,21 @@ const SP_KEY_CTRL = (1 << 28)
 # -----------Change these to your preferred keys-----------
 # Global Shortcuts - Works anywhere
 var KEY_DRAW_MODE_TOGGLE = SP_KEY_CTRL | KEY_QUOTELEFT # Ctrl + `
+var KEY_TOOLBAR_TOGGLE = SP_KEY_CTRL | KEY_F1 # Ctrl + F1
+
 # Draw mode Shortcuts: These shortcuts will work only when draw mode is active
 var KEY_CLEAR_ALL = KEY_C # C key
 var KEY_CLEAR_LAST = KEY_Z # Z key
 var KEY_RESET_POSITION = KEY_R # R key
-var KEY_TOOLBAR_TOGGLE = KEY_H # H key
 # --------------------------------------------------------
 
 
 const SETTINGS_PATH = "user://draw_anywhere.config"
 # Whether the draw mode is active
 var is_active = false
+var should_draw = false
 var canvas: CanvasLayer
 var toolbar: Control
-var should_draw = false
 var current_line = null
 
 var plugin_settings = {}
@@ -78,18 +79,27 @@ func _exit_tree() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.get_scancode_with_modifiers() == KEY_DRAW_MODE_TOGGLE:
-		# Toggle draw mode was pressed
-		set_active(not is_active)
-		get_tree().set_input_as_handled()
-		event = event as InputEventKey
+	# Global shortcuts
+	if event is InputEventKey and event.pressed:
+		var key = event.get_scancode_with_modifiers()
+		match key:
+			KEY_DRAW_MODE_TOGGLE:
+				# Toggle draw mode was pressed
+				set_active(not is_active)
+				get_tree().set_input_as_handled()
+			KEY_TOOLBAR_TOGGLE:
+				# Toggle the toolbar's visibility
+				toolbar.visible = not toolbar.visible
+				get_tree().set_input_as_handled()
+
 
 	if not is_active:
 		return
 
 	# The following inputs only work when draw mode is active
-
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_RIGHT:
+	# Draw mode shortcuts
+	if ((event is InputEventMouseButton and event.button_index == BUTTON_RIGHT) or \
+	(event is InputEventKey and event.scancode == KEY_ESCAPE)) and event.pressed:
 		# Right mouse button was pressed, so deactivate the draw mode
 		set_active(false)
 		get_tree().set_input_as_handled()
@@ -117,12 +127,6 @@ func _input(event: InputEvent) -> void:
 				toolbar._set_global_position(centered_pos)
 				plugin_settings.toolbar_pos = centered_pos
 				get_tree().set_input_as_handled()
-
-			KEY_TOOLBAR_TOGGLE:
-				# Toggle the toolbar's visibility
-				toolbar.visible = not toolbar.visible
-				get_tree().set_input_as_handled()
-
 
 
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
@@ -177,22 +181,24 @@ func set_active(value: bool) -> void:
 
 	if is_active:
 		# Draw mode was activated
+		toolbar.visible = false
 		toolbar.make_draw_button_active()
 		toolbar.hide_color_picker_popup()
 		canvas.set_lines_as_toplevel(true)
 		canvas.block_mouse()
 		canvas.get_active_label().visible = true
-		canvas.show_pencil(self)
+		canvas.show_draw_preview(self)
 	else:
 		# Draw mode was deactivated
 		current_line = null
 		should_draw = false
 
+		toolbar.visible = true
 		toolbar.make_draw_button_normal()
 		canvas.set_lines_as_toplevel(false)
 		canvas.unblock_mouse()
 		canvas.get_active_label().visible = false
-		canvas.hide_pencil()
+		canvas.hide_draw_preview()
 
 
 func add_new_line():
