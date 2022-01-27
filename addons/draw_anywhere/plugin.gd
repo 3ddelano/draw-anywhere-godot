@@ -38,6 +38,8 @@ var default_plugin_settings = {
 }
 var draw_settings = {
 	"size": 1,
+	"min_size": 1,
+	"max_size": 16,
 	"color": Color("#eee"),
 	"antialised": true,
 	"begin_cap_mode": Line2D.LINE_CAP_ROUND,
@@ -146,6 +148,18 @@ func _input(event: InputEvent) -> void:
 		if current_line and is_instance_valid(current_line):
 			current_line.add_point(event.position)
 		get_tree().set_input_as_handled()
+
+	# Handle scrolling to change size
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == BUTTON_WHEEL_UP:
+			_set_draw_size(draw_settings.size + 1)
+		elif event.button_index == BUTTON_WHEEL_DOWN:
+			_set_draw_size(draw_settings.size - 1)
+
+
+func _set_draw_size(p_size):
+	draw_settings.size = clamp(p_size, draw_settings.min_size, draw_settings.max_size)
+	canvas.update_drag_preview_size(self)
 
 
 func _on_draw_button_pressed(is_now_active):

@@ -44,6 +44,9 @@ func show_draw_preview(plugin):
 	draw_preview.visible = true
 	draw_preview.set_process(true)
 
+func update_drag_preview_size(plugin):
+	draw_preview.rect_size = Vector2(plugin.draw_settings.size, plugin.draw_settings.size)
+
 
 func hide_draw_preview():
 	draw_preview.visible = false

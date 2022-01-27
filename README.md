@@ -1,6 +1,6 @@
 Draw Anywhere (Godot Editor)
 =========================================
-###### (Get it from Godot Asset Library - Coming soon)
+###### (Get it from Godot Asset Library - [Asset Library](https://godotengine.org/asset-library/asset/1184))
 
 
 ### Draw anywhere in the Godot Editor. Supports multiple pen sizes and colors.
@@ -18,7 +18,7 @@ Features
 - Floating, draggable toolbar
 - Change pen size and color
 - Draw over Popups
-- Easy keyboard shortcuts
+- Easy shortcut keys
 
 Automatic Installation
 --------------
@@ -51,7 +51,7 @@ Once the plugin is enabled, a new floating toolbar will appear. This toolbar has
 
 When draw mode is active, an indicator will be shown in the bottom-left of the screen.
 
-Keyboard Shortcuts
+Shortcuts
 --------------
 
 ### Global shortcuts
@@ -71,6 +71,8 @@ These shortcuts will only work when draw mode is active
 | C           | Clear all lines            |
 | Z           | Clear last line            |
 | R           | Reset the toolbar position |
+
+Scroll to change pen size
 
 
 Limitations?
