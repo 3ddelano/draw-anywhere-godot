@@ -2,7 +2,7 @@ extends Control
 
 
 func _ready() -> void:
-	$Discord.connect("pressed", self, "_on_discord_button_pressed")
+	$Discord.pressed.connect(_on_discord_button_pressed)
 
 
 func _on_discord_button_pressed():

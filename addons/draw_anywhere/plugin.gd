@@ -4,7 +4,7 @@
 # For license: See LICENSE.md
 
 
-tool
+@tool
 extends EditorPlugin
 
 const SP_KEY_SHIFT = (1 << 25)
@@ -49,8 +49,9 @@ var draw_settings = {
 
 
 func _enter_tree() -> void:
+	print("enter tree")
 	# Instance and add the canvas
-	canvas = preload("res://addons/draw_anywhere/scenes/Canvas.tscn").instance()
+	canvas = preload("res://addons/draw_anywhere/scenes/Canvas.tscn").instantiate()
 	var base_control: Control = get_editor_interface().get_base_control()
 	base_control.add_child(canvas)
 
@@ -59,17 +60,17 @@ func _enter_tree() -> void:
 	var base_theme: Theme = base_control.get_theme()
 	toolbar.theme = base_theme
 
-	toolbar.connect("draw_button_pressed", self, "_on_draw_button_pressed")
-	toolbar.connect("clear_button_pressed", self, "_on_clear_button_pressed")
-	toolbar.connect("draw_size_changed", self, "_on_draw_size_changed")
-	toolbar.connect("color_picker_changed", self, "_on_color_picker_changed")
-	toolbar.connect("stop_draw", self, "_on_toolbar_stop_draw")
-	toolbar.connect("pos_changed", self, "_on_toolbar_pos_changed")
+	toolbar.draw_button_pressed.connect(_on_draw_button_pressed)
+	toolbar.clear_button_pressed.connect(_on_clear_button_pressed)
+	toolbar.draw_size_changed.connect(_on_draw_size_changed)
+	toolbar.color_picker_changed.connect(_on_color_picker_changed)
+	toolbar.stop_draw.connect(_on_toolbar_stop_draw)
+	toolbar.pos_changed.connect(_on_toolbar_pos_changed)
 
 	load_settings()
 
 	if plugin_settings.toolbar_pos:
-		yield(get_tree(), "idle_frame")
+		await get_tree()
 		toolbar._set_global_position(plugin_settings.toolbar_pos)
 
 
@@ -83,16 +84,16 @@ func _exit_tree() -> void:
 func _input(event: InputEvent) -> void:
 	# Global shortcuts
 	if event is InputEventKey and event.pressed:
-		var key = event.get_scancode_with_modifiers()
+		var key = (event as InputEventKey).get_keycode_with_modifiers()
 		match key:
 			KEY_DRAW_MODE_TOGGLE:
 				# Toggle draw mode was pressed
 				set_active(not is_active)
-				get_tree().set_input_as_handled()
+				get_viewport().set_input_as_handled()
 			KEY_TOOLBAR_TOGGLE:
 				# Toggle the toolbar's visibility
 				toolbar.visible = not toolbar.visible
-				get_tree().set_input_as_handled()
+				get_viewport().set_input_as_handled()
 
 
 	if not is_active:
@@ -100,19 +101,19 @@ func _input(event: InputEvent) -> void:
 
 	# The following inputs only work when draw mode is active
 	# Draw mode shortcuts
-	if ((event is InputEventMouseButton and event.button_index == BUTTON_RIGHT) or \
+	if ((event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT) or \
 	(event is InputEventKey and event.scancode == KEY_ESCAPE)) and event.pressed:
 		# Right mouse button was pressed, so deactivate the draw mode
 		set_active(false)
 		get_tree().set_input_as_handled()
 
 	if event is InputEventKey and event.pressed:
-		var key = event.get_scancode_with_modifiers()
+		var key = (event as InputEventKey).get_keycode_with_modifiers()
 		match key:
 			KEY_CLEAR_ALL:
 				# Clear all the lines
 				_on_clear_button_pressed(false)
-				get_tree().set_input_as_handled()
+				get_viewport().set_input_as_handled()
 
 			KEY_CLEAR_LAST:
 				# Clear the last line
@@ -121,17 +122,17 @@ func _input(event: InputEvent) -> void:
 				if line_count > 0:
 					var last_line = lines.get_child(line_count - 1)
 					last_line.queue_free()
-				get_tree().set_input_as_handled()
+				get_viewport().set_input_as_handled()
 
 			KEY_RESET_POSITION:
 				# Reset the position of the toolbar
 				var centered_pos = toolbar.get_viewport_rect().size / 2 - toolbar.rect_size / 2
 				toolbar._set_global_position(centered_pos)
 				plugin_settings.toolbar_pos = centered_pos
-				get_tree().set_input_as_handled()
+				get_viewport().set_input_as_handled()
 
 
-	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			# LMB was pressed, so start the drawing
 			should_draw = true
@@ -141,19 +142,19 @@ func _input(event: InputEvent) -> void:
 				current_line.add_point(event.position + Vector2(0, 1))
 		elif should_draw:
 			should_draw = false
-		get_tree().set_input_as_handled()
+		get_viewport().set_input_as_handled()
 
 	if event is InputEventMouseMotion and should_draw:
 		# Add points to the line
 		if current_line and is_instance_valid(current_line):
 			current_line.add_point(event.position)
-		get_tree().set_input_as_handled()
+		get_viewport().set_input_as_handled()
 
 	# Handle scrolling to change size
 	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == BUTTON_WHEEL_UP:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_set_draw_size(draw_settings.size + 1)
-		elif event.button_index == BUTTON_WHEEL_DOWN:
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_set_draw_size(draw_settings.size - 1)
 
 
@@ -165,6 +166,7 @@ func _set_draw_size(p_size):
 func _on_draw_button_pressed(is_now_active):
 	# Draw button on the toolbar was pressed
 	set_active(is_now_active)
+	print("_on_draw_button_pressed")
 
 
 func _on_clear_button_pressed(also_deactivate = true):
@@ -195,6 +197,7 @@ func set_active(value: bool) -> void:
 
 	if is_active:
 		# Draw mode was activated
+		print("activated")
 		toolbar.visible = false
 		toolbar.make_draw_button_active()
 		toolbar.hide_color_picker_popup()
@@ -204,6 +207,7 @@ func set_active(value: bool) -> void:
 		canvas.show_draw_preview(self)
 	else:
 		# Draw mode was deactivated
+		print("deactivated")
 		current_line = null
 		should_draw = false
 
@@ -245,25 +249,23 @@ func save_settings():
 		if plugin_settings[key] != default_plugin_settings[key]:
 			settings_to_save[key] = plugin_settings[key]
 
-	if settings_to_save.empty():
+	if settings_to_save.is_empty():
 		# Nothing to save
 		return
-
-	var file = File.new()
-	file.open(SETTINGS_PATH, File.WRITE)
-	file.store_string(var2str(settings_to_save))
+	
+	var file = FileAccess.open(SETTINGS_PATH, FileAccess.WRITE)
+	file.store_line(var_to_str(settings_to_save))
 	file.close()
 
 
 func load_settings():
-	var file = File.new()
-	var err = file.open(SETTINGS_PATH, File.READ)
+	var file = FileAccess.open(SETTINGS_PATH, FileAccess.READ)
+	var err = FileAccess.get_open_error()
 	if err != OK:
 		# Error opening saved settings
 		plugin_settings = default_plugin_settings.duplicate(true)
 		return
 
-
 	var content = file.get_as_text()
 	file.close()
-	plugin_settings = str2var(content)
+	plugin_settings = str_to_var(content)

@@ -1,7 +1,7 @@
-tool
+@tool
 extends CanvasLayer
 
-var lines
+var lines: Control
 var toolbar
 var draw_preview
 
@@ -33,7 +33,7 @@ func unblock_mouse():
 
 
 func set_lines_as_toplevel(value: bool):
-	lines.set_as_toplevel(value)
+	lines.top_level = value
 	if value:
 		lines.show_modal(true)
 
