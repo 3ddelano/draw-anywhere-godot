@@ -41,6 +41,3 @@ func set_icon(p_icon: Texture) -> void:
 
 func set_state(p_state: int) -> void:
 	state = p_state
-
-func _gui_input(event: InputEvent) -> void:
-	get_viewport().set_input_as_handled()

@@ -3,7 +3,7 @@ extends CanvasLayer
 
 var lines: Control
 var toolbar
-var draw_preview
+var draw_preview: Panel
 
 func _ready() -> void:
 	lines = $Lines
@@ -34,18 +34,16 @@ func unblock_mouse():
 
 func set_lines_as_toplevel(value: bool):
 	lines.top_level = value
-	if value:
-		lines.show_modal(true)
 
 
 func show_draw_preview(plugin):
-	draw_preview.rect_size = Vector2(plugin.draw_settings.size, plugin.draw_settings.size)
+	draw_preview.size = Vector2(plugin.draw_settings.size, plugin.draw_settings.size)
 	draw_preview.self_modulate = plugin.draw_settings.color
 	draw_preview.visible = true
 	draw_preview.set_process(true)
 
 func update_drag_preview_size(plugin):
-	draw_preview.rect_size = Vector2(plugin.draw_settings.size, plugin.draw_settings.size)
+	draw_preview.size = Vector2(plugin.draw_settings.size, plugin.draw_settings.size)
 
 
 func hide_draw_preview():

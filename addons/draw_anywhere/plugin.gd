@@ -49,7 +49,6 @@ var draw_settings = {
 
 
 func _enter_tree() -> void:
-	print("enter tree")
 	# Instance and add the canvas
 	canvas = preload("res://addons/draw_anywhere/scenes/Canvas.tscn").instantiate()
 	var base_control: Control = get_editor_interface().get_base_control()
@@ -57,8 +56,6 @@ func _enter_tree() -> void:
 
 	# Get the toolbar and connect some signals
 	toolbar = canvas.get_toolbar()
-	var base_theme: Theme = base_control.get_theme()
-	toolbar.theme = base_theme
 
 	toolbar.draw_button_pressed.connect(_on_draw_button_pressed)
 	toolbar.clear_button_pressed.connect(_on_clear_button_pressed)
@@ -102,10 +99,10 @@ func _input(event: InputEvent) -> void:
 	# The following inputs only work when draw mode is active
 	# Draw mode shortcuts
 	if ((event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT) or \
-	(event is InputEventKey and event.scancode == KEY_ESCAPE)) and event.pressed:
+	(event is InputEventKey and (event as InputEventKey).keycode == KEY_ESCAPE)) and event.pressed:
 		# Right mouse button was pressed, so deactivate the draw mode
 		set_active(false)
-		get_tree().set_input_as_handled()
+		get_viewport().set_input_as_handled()
 
 	if event is InputEventKey and event.pressed:
 		var key = (event as InputEventKey).get_keycode_with_modifiers()
@@ -126,7 +123,7 @@ func _input(event: InputEvent) -> void:
 
 			KEY_RESET_POSITION:
 				# Reset the position of the toolbar
-				var centered_pos = toolbar.get_viewport_rect().size / 2 - toolbar.rect_size / 2
+				var centered_pos = toolbar.get_viewport_rect().size / 2 - toolbar.size / 2
 				toolbar._set_global_position(centered_pos)
 				plugin_settings.toolbar_pos = centered_pos
 				get_viewport().set_input_as_handled()
@@ -166,7 +163,6 @@ func _set_draw_size(p_size):
 func _on_draw_button_pressed(is_now_active):
 	# Draw button on the toolbar was pressed
 	set_active(is_now_active)
-	print("_on_draw_button_pressed")
 
 
 func _on_clear_button_pressed(also_deactivate = true):
@@ -197,7 +193,6 @@ func set_active(value: bool) -> void:
 
 	if is_active:
 		# Draw mode was activated
-		print("activated")
 		toolbar.visible = false
 		toolbar.make_draw_button_active()
 		toolbar.hide_color_picker_popup()
@@ -207,7 +202,6 @@ func set_active(value: bool) -> void:
 		canvas.show_draw_preview(self)
 	else:
 		# Draw mode was deactivated
-		print("deactivated")
 		current_line = null
 		should_draw = false
 
